@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Mic, MicOff, Send, Loader, Bot, User, LogOut } from 'react-icons/react';
+import { Camera, Mic, MicOff, Send, Loader, Bot, User, LogOut } from 'react-icons/hi';
 import CameraComponent from './components/CameraComponent';
 import ChatInterface from './components/ChatInterface';
 import StatusIndicator from './components/StatusIndicator';
@@ -149,36 +149,37 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [currentFrame, setCurrentFrame] = useState(null);
   const [isLLMAvailable, setIsLLMAvailable] = useState(false);
-  
+
   // Error states
   const [connectionError, setConnectionError] = useState(null);
   const [cameraError, setCameraError] = useState(null);
   const [llmError, setLLMError] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [currentError, setCurrentError] = useState(null);
-  
+
   // Toast notifications
   const [toasts, setToasts] = useState([]);
-  
+
   const wsService = useRef(new WebSocketService());
+  const wsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:8000/ws';
   const apiService = useRef(new ApiService());
   const authService = useRef(new AuthService());
 
-    // Helper functions
-    const addToast = (type, title, message) => {
-        const id = Date.now();
-        setToasts(prev => [...prev, { id, type, title, message }]);
-        setTimeout(() => removeToast(id), 5000);
-    };
+  // Helper functions
+  const addToast = (type, title, message) => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, type, title, message }]);
+    setTimeout(() => removeToast(id), 5000);
+  };
 
-    const removeToast = (id) => {
-        setToasts(prev => prev.filter(toast => toast.id !== id));
-    };
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
 
-    const showError = (error) => {
-        setCurrentError(error);
-        setShowErrorModal(true);
-    };
+  const showError = (error) => {
+    setCurrentError(error);
+    setShowErrorModal(true);
+  };
 
   const checkAuthStatus = async () => {
     if (authService.current.isAuthenticated()) {
@@ -232,134 +233,134 @@ function App() {
   useEffect(() => {
     // Check authentication status
     checkAuthStatus();
-    
+
     // Check LLM service availability
     checkLLMService();
-    
+
     // Initialize WebSocket connection
-    wsService.current.connect('ws://localhost:8000/ws');
+    wsService.current.connect(wsUrl);
 
-        wsService.current.onMessage = (data) => {
-            if (data.type === 'frame') {
-                setCurrentFrame(data.data);
-            } else if (data.type === 'llm_response') {
-                setIsProcessing(false);
-                const response = data.data;
-                setMessages(prev => [...prev, {
-                    id: Date.now(),
-                    type: 'ai',
-                    content: response.response,
-                    timestamp: new Date(),
-                    confidence: response.confidence,
-                    processingTime: response.processing_time
-                }]);
-                addToast('success', 'AI Response', 'AI analysis completed successfully!');
-            } else if (data.type === 'error') {
-                setIsProcessing(false);
-                const error = { type: 'llm', message: data.message };
-                setLLMError(error);
-                showError(error);
-                addToast('error', 'AI Error', data.message);
-            }
-        };
-
-        wsService.current.onConnect = () => {
-            setIsConnected(true);
-            setConnectionError(null);
-            addToast('success', 'Connected', 'Connected to AI Assistant');
-        };
-
-        wsService.current.onDisconnect = () => {
-            setIsConnected(false);
-            const error = { type: 'connection', message: 'Lost connection to server' };
-            setConnectionError(error);
-            addToast('error', 'Disconnected', 'Lost connection to AI Assistant');
-        };
-
-        return () => {
-            wsService.current.disconnect();
-        };
-    }, []);
-
-    const startCamera = async () => {
-        try {
-            setCameraError(null);
-            await apiService.current.startCamera({
-                width: 640,
-                height: 480,
-                fps: 30
-            });
-            setIsCameraActive(true);
-            addToast('success', 'Camera Started', 'Camera is now active');
-        } catch (error) {
-            const cameraError = { type: 'camera', message: error.message || 'Failed to start camera' };
-            setCameraError(cameraError);
-            showError(cameraError);
-            addToast('error', 'Camera Error', 'Failed to start camera');
-            console.error('Camera start error:', error);
-        }
-    };
-
-    const stopCamera = async () => {
-        try {
-            setCameraError(null);
-            await apiService.current.stopCamera();
-            setIsCameraActive(false);
-            setCurrentFrame(null);
-            addToast('success', 'Camera Stopped', 'Camera has been stopped');
-        } catch (error) {
-            const cameraError = { type: 'camera', message: error.message || 'Failed to stop camera' };
-            setCameraError(cameraError);
-            showError(cameraError);
-            addToast('error', 'Camera Error', 'Failed to stop camera');
-            console.error('Camera stop error:', error);
-        }
-    };
-
-    const processImage = async (prompt = 'Analyze this image and provide helpful insights.') => {
-        if (!currentFrame) {
-            addToast('warning', 'No Image', 'No image available to process');
-            return;
-        }
-
-        if (!isLLMAvailable) {
-            const error = { type: 'llm', message: 'AI service is not available' };
-            setLLMError(error);
-            showError(error);
-            addToast('error', 'AI Unavailable', 'AI service is not available');
-            return;
-        }
-
-        setIsProcessing(true);
-        setLLMError(null);
+    wsService.current.onMessage = (data) => {
+      if (data.type === 'frame') {
+        setCurrentFrame(data.data);
+      } else if (data.type === 'llm_response') {
+        setIsProcessing(false);
+        const response = data.data;
         setMessages(prev => [...prev, {
-            id: Date.now(),
-            type: 'user',
-            content: prompt,
-            timestamp: new Date()
+          id: Date.now(),
+          type: 'ai',
+          content: response.response,
+          timestamp: new Date(),
+          confidence: response.confidence,
+          processingTime: response.processing_time
         }]);
-
-        try {
-            wsService.current.send({
-                type: 'process_image',
-                image_data: currentFrame,
-                prompt: prompt
-            });
-        } catch (error) {
-            setIsProcessing(false);
-            const llmError = { type: 'llm', message: error.message || 'Failed to process image' };
-            setLLMError(llmError);
-            showError(llmError);
-            addToast('error', 'Processing Error', 'Failed to process image');
-            console.error('Image processing error:', error);
-        }
+        addToast('success', 'AI Response', 'AI analysis completed successfully!');
+      } else if (data.type === 'error') {
+        setIsProcessing(false);
+        const error = { type: 'llm', message: data.message };
+        setLLMError(error);
+        showError(error);
+        addToast('error', 'AI Error', data.message);
+      }
     };
 
-    const sendMessage = (message) => {
-        if (message.trim()) {
-            processImage(message);
-        }
+    wsService.current.onConnect = () => {
+      setIsConnected(true);
+      setConnectionError(null);
+      addToast('success', 'Connected', 'Connected to AI Assistant');
     };
+
+    wsService.current.onDisconnect = () => {
+      setIsConnected(false);
+      const error = { type: 'connection', message: 'Lost connection to server' };
+      setConnectionError(error);
+      addToast('error', 'Disconnected', 'Lost connection to AI Assistant');
+    };
+
+    return () => {
+      wsService.current.disconnect();
+    };
+  }, []);
+
+  const startCamera = async () => {
+    try {
+      setCameraError(null);
+      await apiService.current.startCamera({
+        width: 640,
+        height: 480,
+        fps: 30
+      });
+      setIsCameraActive(true);
+      addToast('success', 'Camera Started', 'Camera is now active');
+    } catch (error) {
+      const cameraError = { type: 'camera', message: error.message || 'Failed to start camera' };
+      setCameraError(cameraError);
+      showError(cameraError);
+      addToast('error', 'Camera Error', 'Failed to start camera');
+      console.error('Camera start error:', error);
+    }
+  };
+
+  const stopCamera = async () => {
+    try {
+      setCameraError(null);
+      await apiService.current.stopCamera();
+      setIsCameraActive(false);
+      setCurrentFrame(null);
+      addToast('success', 'Camera Stopped', 'Camera has been stopped');
+    } catch (error) {
+      const cameraError = { type: 'camera', message: error.message || 'Failed to stop camera' };
+      setCameraError(cameraError);
+      showError(cameraError);
+      addToast('error', 'Camera Error', 'Failed to stop camera');
+      console.error('Camera stop error:', error);
+    }
+  };
+
+  const processImage = async (prompt = 'Analyze this image and provide helpful insights.') => {
+    if (!currentFrame) {
+      addToast('warning', 'No Image', 'No image available to process');
+      return;
+    }
+
+    if (!isLLMAvailable) {
+      const error = { type: 'llm', message: 'AI service is not available' };
+      setLLMError(error);
+      showError(error);
+      addToast('error', 'AI Unavailable', 'AI service is not available');
+      return;
+    }
+
+    setIsProcessing(true);
+    setLLMError(null);
+    setMessages(prev => [...prev, {
+      id: Date.now(),
+      type: 'user',
+      content: prompt,
+      timestamp: new Date()
+    }]);
+
+    try {
+      wsService.current.send({
+        type: 'process_image',
+        image_data: currentFrame,
+        prompt: prompt
+      });
+    } catch (error) {
+      setIsProcessing(false);
+      const llmError = { type: 'llm', message: error.message || 'Failed to process image' };
+      setLLMError(llmError);
+      showError(llmError);
+      addToast('error', 'Processing Error', 'Failed to process image');
+      console.error('Image processing error:', error);
+    }
+  };
+
+  const sendMessage = (message) => {
+    if (message.trim()) {
+      processImage(message);
+    }
+  };
 
   // Show login screen if not authenticated
   if (!isAuthenticated) {
@@ -374,10 +375,10 @@ function App() {
         transition={{ duration: 0.5 }}
       >
         <Title>
-          <Bot size={32} />
+          <HiChip size={32} />
           VisionAI
         </Title>
-        
+
         <UserInfo>
           <UserAvatar>
             {currentUser?.username?.charAt(0).toUpperCase() || 'U'}
@@ -388,12 +389,12 @@ function App() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <LogOut size={16} />
+            <HiLogout size={16} />
             Logout
           </LogoutButton>
         </UserInfo>
-        
-        <StatusIndicator 
+
+        <StatusIndicator
           isConnected={isConnected}
           isCameraActive={isCameraActive}
           isProcessing={isProcessing}
@@ -404,79 +405,79 @@ function App() {
         />
       </Header>
 
-            <MainContent>
-                <CameraSection
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                >
-                    <CameraComponent
-                        frame={currentFrame}
-                        isActive={isCameraActive}
-                    />
+      <MainContent>
+        <CameraSection
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <CameraComponent
+            frame={currentFrame}
+            isActive={isCameraActive}
+          />
 
-                    <ControlPanel>
-                        <ControlButton
-                            onClick={isCameraActive ? stopCamera : startCamera}
-                            active={isCameraActive}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            <Camera size={20} />
-                            {isCameraActive ? 'Stop Camera' : 'Start Camera'}
-                        </ControlButton>
+          <ControlPanel>
+            <ControlButton
+              onClick={isCameraActive ? stopCamera : startCamera}
+              active={isCameraActive}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <HiCamera size={20} />
+              {isCameraActive ? 'Stop Camera' : 'Start Camera'}
+            </ControlButton>
 
-                        <ControlButton
-                            onClick={() => processImage()}
-                            disabled={!isCameraActive || isProcessing || !isLLMAvailable}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            {isProcessing ? <Loader size={20} /> : <Send size={20} />}
-                            {isProcessing ? 'Processing...' : 'Ask AI'}
-                        </ControlButton>
-                    </ControlPanel>
-                </CameraSection>
+            <ControlButton
+              onClick={() => processImage()}
+              disabled={!isCameraActive || isProcessing || !isLLMAvailable}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {isProcessing ? <HiArrowPath size={20} /> : <HiPaperAirplane size={20} />}
+              {isProcessing ? 'Processing...' : 'Ask AI'}
+            </ControlButton>
+          </ControlPanel>
+        </CameraSection>
 
-                <ChatSection
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                >
-                    <ChatInterface
-                        messages={messages}
-                        onSendMessage={sendMessage}
-                        isProcessing={isProcessing}
-                        isLLMAvailable={isLLMAvailable}
-                    />
-                </ChatSection>
-            </MainContent>
+        <ChatSection
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <ChatInterface
+            messages={messages}
+            onSendMessage={sendMessage}
+            isProcessing={isProcessing}
+            isLLMAvailable={isLLMAvailable}
+          />
+        </ChatSection>
+      </MainContent>
 
-            {/* Error Modal */}
-            <ErrorModal
-                isOpen={showErrorModal}
-                onClose={() => setShowErrorModal(false)}
-                error={currentError}
-                onRetry={() => {
-                    if (currentError?.type === 'connection') {
-                        wsService.current.connect('ws://localhost:8000/ws');
-                    } else if (currentError?.type === 'camera') {
-                        if (isCameraActive) {
-                            stopCamera();
-                        } else {
-                            startCamera();
-                        }
-                    } else if (currentError?.type === 'llm') {
-                        checkLLMService();
-                    }
-                    setShowErrorModal(false);
-                }}
-            />
+      {/* Error Modal */}
+      <ErrorModal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        error={currentError}
+        onRetry={() => {
+          if (currentError?.type === 'connection') {
+            wsService.current.connect(wsUrl);
+          } else if (currentError?.type === 'camera') {
+            if (isCameraActive) {
+              stopCamera();
+            } else {
+              startCamera();
+            }
+          } else if (currentError?.type === 'llm') {
+            checkLLMService();
+          }
+          setShowErrorModal(false);
+        }}
+      />
 
-            {/* Toast Notifications */}
-            <ToastManager toasts={toasts} onRemove={removeToast} />
-        </AppContainer>
-    );
+      {/* Toast Notifications */}
+      <ToastManager toasts={toasts} onRemove={removeToast} />
+    </AppContainer>
+  );
 }
 
 export default App;

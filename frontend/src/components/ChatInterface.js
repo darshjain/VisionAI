@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Bot, User, Clock } from 'react-icons/react';
+import { HiPaperAirplane, HiChip, HiUser, HiClock } from 'react-icons/hi';
 
 const ChatContainer = styled.div`
   display: flex;
@@ -148,12 +148,12 @@ const ChatInterface = ({ messages, onSendMessage, isProcessing, isLLMAvailable }
                             transition={{ duration: 0.3 }}
                         >
                             <MessageAvatar isUser={message.type === 'user'}>
-                                {message.type === 'user' ? <User size={16} /> : <Bot size={16} />}
+                                {message.type === 'user' ? <HiUser size={16} /> : <HiChip size={16} />}
                             </MessageAvatar>
                             <MessageContent isUser={message.type === 'user'}>
                                 {message.content}
                                 <MessageMeta>
-                                    <Clock size={12} />
+                                    <HiClock size={12} />
                                     {formatTime(message.timestamp)}
                                     {message.confidence && (
                                         <span>Confidence: {(message.confidence * 100).toFixed(1)}%</span>
@@ -173,7 +173,7 @@ const ChatInterface = ({ messages, onSendMessage, isProcessing, isLLMAvailable }
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                     >
-                        <Bot size={16} />
+                        <HiChip size={16} />
                         AI is analyzing your image...
                     </TypingIndicator>
                 )}
@@ -195,7 +195,7 @@ const ChatInterface = ({ messages, onSendMessage, isProcessing, isLLMAvailable }
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <Send size={16} />
+                    <HiPaperAirplane size={16} />
                 </SendButton>
             </InputContainer>
         </ChatContainer>

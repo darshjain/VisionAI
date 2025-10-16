@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, EyeOff, User, Lock, Mail, Loader, CheckCircle, AlertCircle, Bot } from 'react-icons/react';
+import { HiEye, HiEyeOff, HiUser, HiLockClosed, HiMail, HiArrowPath, HiCheckCircle, HiExclamationCircle, HiChip } from 'react-icons/hi';
 import axios from 'axios';
 
 const LoginContainer = styled.div`
@@ -340,7 +340,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
       >
         <Header>
           <Logo>
-            <Bot size={32} color="#667eea" />
+            <HiChip size={32} color="#667eea" />
             <Title>VisionAI</Title>
           </Logo>
           <Subtitle>
@@ -351,7 +351,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
         <Form onSubmit={handleSubmit}>
           <InputGroup>
             <InputIcon>
-              <User size={20} />
+              <HiUser size={20} />
             </InputIcon>
             <Input
               type="text"
@@ -367,7 +367,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
           {!isLogin && (
             <InputGroup>
               <InputIcon>
-                <Mail size={20} />
+                <HiMail size={20} />
               </InputIcon>
               <Input
                 type="email"
@@ -383,7 +383,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
 
           <InputGroup>
             <InputIcon>
-              <Lock size={20} />
+              <HiLockClosed size={20} />
             </InputIcon>
             <Input
               type={showPassword ? "text" : "password"}
@@ -399,14 +399,14 @@ const LoginScreen = ({ onLoginSuccess }) => {
               onClick={() => setShowPassword(!showPassword)}
               disabled={isLoading}
             >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showPassword ? <HiEyeOff size={20} /> : <HiEye size={20} />}
             </PasswordToggle>
           </InputGroup>
 
           {!isLogin && (
             <InputGroup>
               <InputIcon>
-                <Lock size={20} />
+                <HiLockClosed size={20} />
               </InputIcon>
               <Input
                 type={showConfirmPassword ? "text" : "password"}
@@ -422,7 +422,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 disabled={isLoading}
               >
-                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showConfirmPassword ? <HiEyeOff size={20} /> : <HiEye size={20} />}
               </PasswordToggle>
             </InputGroup>
           )}
@@ -435,7 +435,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
               >
-                <AlertCircle size={16} />
+                <HiExclamationCircle size={16} />
                 {error}
               </ErrorMessage>
             )}
@@ -449,7 +449,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
               >
-                <CheckCircle size={16} />
+                <HiCheckCircle size={16} />
                 {success}
               </SuccessMessage>
             )}
@@ -463,7 +463,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
           >
             {isLoading ? (
               <>
-                <Loader size={20} className="animate-spin" />
+                <HiArrowPath size={20} className="animate-spin" />
                 {isLogin ? 'Signing in...' : 'Creating account...'}
               </>
             ) : (
@@ -493,7 +493,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               >
-                <Loader size={32} color="#667eea" />
+                <HiArrowPath size={32} color="#667eea" />
               </motion.div>
             </LoadingOverlay>
           )}

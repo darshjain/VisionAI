@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, AlertTriangle, CheckCircle, Info, RefreshCw } from 'react-icons/react';
+import { HiX, HiExclamation, HiCheckCircle, HiInformationCircle, HiArrowPath } from 'react-icons/hi';
 
 const ModalOverlay = styled(motion.div)`
   position: fixed;
@@ -131,10 +131,10 @@ const Button = styled.button`
 
 const ErrorModal = ({ isOpen, onClose, error, onRetry }) => {
     const getErrorIcon = () => {
-        if (error?.type === 'connection') return <AlertTriangle size={24} />;
-        if (error?.type === 'camera') return <AlertTriangle size={24} />;
-        if (error?.type === 'llm') return <AlertTriangle size={24} />;
-        return <AlertTriangle size={24} />;
+        if (error?.type === 'connection') return <HiExclamation size={24} />;
+        if (error?.type === 'camera') return <HiExclamation size={24} />;
+        if (error?.type === 'llm') return <HiExclamation size={24} />;
+        return <HiExclamation size={24} />;
     };
 
     const getErrorTitle = () => {
@@ -190,7 +190,7 @@ const ErrorModal = ({ isOpen, onClose, error, onRetry }) => {
                                 {getErrorTitle()}
                             </ModalTitle>
                             <CloseButton onClick={onClose}>
-                                <X size={20} />
+                                <HiX size={20} />
                             </CloseButton>
                         </ModalHeader>
 
@@ -220,7 +220,7 @@ const ErrorModal = ({ isOpen, onClose, error, onRetry }) => {
                             </Button>
                             {onRetry && (
                                 <Button variant="primary" onClick={onRetry}>
-                                    <RefreshCw size={16} style={{ marginRight: '0.5rem' }} />
+                                    <HiArrowPath size={16} style={{ marginRight: '0.5rem' }} />
                                     Retry
                                 </Button>
                             )}

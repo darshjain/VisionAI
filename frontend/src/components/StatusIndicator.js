@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { Wifi, WifiOff, Camera, CameraOff, Bot, BotOff, Loader } from 'react-icons/react';
+import { HiWifi, HiWifiOff, HiCamera, HiCameraOff, HiChip, HiChipOff, HiArrowPath } from 'react-icons/hi';
 
 const StatusContainer = styled.div`
   display: flex;
@@ -69,7 +69,7 @@ const StatusIndicator = ({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
             >
-                {isConnected ? <Wifi size={16} /> : <WifiOff size={16} />}
+                {isConnected ? <HiWifi size={16} /> : <HiWifiOff size={16} />}
                 {isConnected ? 'Connected' : 'Disconnected'}
             </StatusItem>
 
@@ -79,7 +79,7 @@ const StatusIndicator = ({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
             >
-                {isCameraActive ? <Camera size={16} /> : <CameraOff size={16} />}
+                {isCameraActive ? <HiCamera size={16} /> : <HiCameraOff size={16} />}
                 Camera {isCameraActive ? 'On' : 'Off'}
             </StatusItem>
 
@@ -89,7 +89,7 @@ const StatusIndicator = ({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.2 }}
             >
-                {isLLMAvailable ? <Bot size={16} /> : <BotOff size={16} />}
+                {isLLMAvailable ? <HiChip size={16} /> : <HiChipOff size={16} />}
                 AI {isLLMAvailable ? 'Ready' : 'Unavailable'}
             </StatusItem>
 
@@ -101,7 +101,7 @@ const StatusIndicator = ({
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.3, delay: 0.3 }}
                 >
-                    <Loader size={16} />
+                    <HiArrowPath size={16} />
                     Processing
                 </StatusItem>
             )}

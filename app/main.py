@@ -19,13 +19,15 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="VisionAI",
     version="1.0.0",
-    description="Production-ready AI Vision Assistant with JWT Authentication"
+    description="Production-ready AI Vision Assistant with JWT Authentication",
 )
 
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origins=(
+        ["*"] if settings.ALLOWED_ORIGINS == "*" else [settings.ALLOWED_ORIGINS]
+    ),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -37,18 +39,18 @@ app.include_router(camera.router, prefix="/camera", tags=["camera"])
 app.include_router(llm.router, prefix="/llm", tags=["llm"])
 app.include_router(websocket.router, prefix="/ws", tags=["websocket"])
 
+
 @app.get("/")
 async def root():
-    return {
-        "message": "VisionAI API",
-        "status": "running",
-        "version": "1.0.0"
-    }
+    return {"message": "VisionAI API", "status": "running", "version": "1.0.0"}
+
 
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

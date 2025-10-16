@@ -11,8 +11,8 @@ services:
       - PYTHONPATH=/app
       - OLLAMA_URL=http://ollama:11434
       - MODEL_NAME=llava:7b
-    devices:
-      - /dev/video0:/dev/video0 # Camera access
+    # devices:
+    #   - /dev/video0:/dev/video0 # Camera access (Linux only)
     depends_on:
       - ollama
     restart: unless-stopped

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, AlertTriangle, Info, X } from 'react-icons/react';
+import { HiCheckCircle, HiExclamation, HiInformationCircle, HiX } from 'react-icons/hi';
 
 const ToastContainer = styled.div`
   position: fixed;
@@ -73,13 +73,13 @@ const ToastManager = ({ toasts, onRemove }) => {
     const getIcon = (type) => {
         switch (type) {
             case 'success':
-                return <CheckCircle size={20} />;
+                return <HiCheckCircle size={20} />;
             case 'error':
-                return <AlertTriangle size={20} />;
+                return <HiExclamation size={20} />;
             case 'warning':
-                return <AlertTriangle size={20} />;
+                return <HiExclamation size={20} />;
             default:
-                return <Info size={20} />;
+                return <HiInformationCircle size={20} />;
         }
     };
 
@@ -103,7 +103,7 @@ const ToastManager = ({ toasts, onRemove }) => {
                             <ToastMessage>{toast.message}</ToastMessage>
                         </ToastContent>
                         <CloseButton onClick={() => onRemove(toast.id)}>
-                            <X size={16} />
+                            <HiX size={16} />
                         </CloseButton>
                     </Toast>
                 ))}
