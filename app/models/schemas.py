@@ -48,6 +48,10 @@ class LLMRequest(BaseModel):
     prompt: Optional[str] = None
 
 
+class LLMTextRequest(BaseModel):
+    prompt: str
+
+
 class LLMResponse(BaseModel):
     response: str
     confidence: float

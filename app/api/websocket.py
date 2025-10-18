@@ -19,11 +19,15 @@ websocket_service = WebSocketService()
 @router.websocket("/")
 async def websocket_endpoint(websocket: WebSocket):
     """WebSocket endpoint for real-time communication"""
-    await websocket.accept()
-    websocket_service.add_client(websocket)
-    logger.info(
-        f"Client connected. Total clients: {len(websocket_service.connected_clients)}"
-    )
+    try:
+        await websocket.accept()
+        websocket_service.add_client(websocket)
+        logger.info(
+            f"Client connected. Total clients: {len(websocket_service.connected_clients)}"
+        )
+    except Exception as e:
+        logger.error(f"Failed to accept WebSocket connection: {e}")
+        return
 
     try:
         while True:
@@ -65,6 +69,25 @@ async def websocket_endpoint(websocket: WebSocket):
                             {
                                 "type": "error",
                                 "message": f"Failed to process image: {str(e)}",
+                            }
+                        )
+                
+                elif data.get("type") == "chat_message":
+                    try:
+                        # Process text-only message with LLM
+                        result = await llm_service.process_text_with_llm(
+                            data.get("message", "")
+                        )
+
+                        await websocket.send_json(
+                            {"type": "llm_response", "data": result.dict()}
+                        )
+                    except Exception as e:
+                        logger.error(f"LLM text processing error: {e}")
+                        await websocket.send_json(
+                            {
+                                "type": "error",
+                                "message": f"Failed to process message: {str(e)}",
                             }
                         )
 

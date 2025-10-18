@@ -53,6 +53,17 @@ class WebSocketService {
     }
   }
 
+  sendMessage(message) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({
+        type: 'chat_message',
+        message: message
+      }));
+    } else {
+      console.error('WebSocket is not connected');
+    }
+  }
+
   send(data) {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(data));
@@ -65,7 +76,7 @@ class WebSocketService {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       console.log(`Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
-      
+
       setTimeout(() => {
         this.connect(this.url);
       }, this.reconnectDelay * this.reconnectAttempts);
