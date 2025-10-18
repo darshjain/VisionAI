@@ -1,9 +1,7 @@
 # WebSocket API router
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 import asyncio
 import logging
-from app.core.database import get_db
 from app.services.camera_service import CameraService
 from app.services.llm_service import LLMService
 from app.services.websocket_service import WebSocketService
@@ -19,15 +17,12 @@ websocket_service = WebSocketService()
 @router.websocket("/")
 async def websocket_endpoint(websocket: WebSocket):
     """WebSocket endpoint for real-time communication"""
-    try:
-        await websocket.accept()
-        websocket_service.add_client(websocket)
-        logger.info(
-            f"Client connected. Total clients: {len(websocket_service.connected_clients)}"
-        )
-    except Exception as e:
-        logger.error(f"Failed to accept WebSocket connection: {e}")
-        return
+    # Accept the WebSocket connection without any authentication checks
+    await websocket.accept()
+    websocket_service.add_client(websocket)
+    logger.info(
+        f"Client connected. Total clients: {len(websocket_service.connected_clients)}"
+    )
 
     try:
         while True:

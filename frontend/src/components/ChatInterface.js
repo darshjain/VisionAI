@@ -7,15 +7,37 @@ const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  max-height: 100%;
 `;
 
 const MessagesContainer = styled.div`
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 1rem 0;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-height: 0;
+  
+  /* Custom scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
 `;
 
 const Message = styled(motion.div)`

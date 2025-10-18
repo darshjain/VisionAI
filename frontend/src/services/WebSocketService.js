@@ -11,6 +11,7 @@ class WebSocketService {
   }
 
   connect(url) {
+    console.log('WebSocketService connecting to:', url);
     this.url = url;
     this.ws = new WebSocket(url);
 

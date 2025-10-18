@@ -104,6 +104,9 @@ const ChatSection = styled(motion.div)`
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
+  height: 600px;
+  max-height: 600px;
+  overflow: hidden;
 `;
 
 const ControlPanel = styled.div`
@@ -161,7 +164,7 @@ function App() {
   const [toasts, setToasts] = useState([]);
 
   const wsService = useRef(new WebSocketService());
-  const wsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:8000/ws';
+  const wsUrl = 'ws://localhost:8000/ws-direct';
   const apiService = useRef(new ApiService());
   const authService = useRef(new AuthService());
 
@@ -238,6 +241,7 @@ function App() {
     checkLLMService();
 
     // Initialize WebSocket connection
+    console.log('Connecting to WebSocket:', wsUrl);
     wsService.current.connect(wsUrl);
 
     wsService.current.onMessage = (data) => {
@@ -285,11 +289,6 @@ function App() {
   const startCamera = async () => {
     try {
       setCameraError(null);
-      await apiService.current.startCamera({
-        width: 640,
-        height: 480,
-        fps: 30
-      });
       setIsCameraActive(true);
       addToast('success', 'Camera Started', 'Camera is now active');
     } catch (error) {
@@ -304,7 +303,6 @@ function App() {
   const stopCamera = async () => {
     try {
       setCameraError(null);
-      await apiService.current.stopCamera();
       setIsCameraActive(false);
       setCurrentFrame(null);
       addToast('success', 'Camera Stopped', 'Camera has been stopped');
@@ -315,6 +313,10 @@ function App() {
       addToast('error', 'Camera Error', 'Failed to stop camera');
       console.error('Camera stop error:', error);
     }
+  };
+
+  const handleFrameCapture = (frameData) => {
+    setCurrentFrame(frameData);
   };
 
   const processImage = async (prompt = 'Analyze this image and provide helpful insights.') => {
@@ -330,6 +332,9 @@ function App() {
       addToast('error', 'AI Unavailable', 'AI service is not available');
       return;
     }
+
+    console.log('Processing image with prompt:', prompt);
+    console.log('Current frame length:', currentFrame ? currentFrame.length : 'null');
 
     setIsProcessing(true);
     setLLMError(null);
@@ -412,8 +417,8 @@ function App() {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <CameraComponent
-            frame={currentFrame}
             isActive={isCameraActive}
+            onFrameCapture={handleFrameCapture}
           />
 
           <ControlPanel>
