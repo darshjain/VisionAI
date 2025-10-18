@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiEye, HiEyeOff, HiUser, HiLockClosed, HiMail, HiArrowPath, HiCheckCircle, HiExclamationCircle, HiChip } from 'react-icons/hi';
+import { HiEye, HiEyeOff, HiUser, HiLockClosed, HiMail, HiRefresh, HiCheckCircle, HiExclamationCircle, HiChip } from 'react-icons/hi';
 import axios from 'axios';
 
 const LoginContainer = styled.div`
@@ -463,7 +463,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
           >
             {isLoading ? (
               <>
-                <HiArrowPath size={20} className="animate-spin" />
+                <HiRefresh size={20} className="animate-spin" />
                 {isLogin ? 'Signing in...' : 'Creating account...'}
               </>
             ) : (
@@ -493,7 +493,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               >
-                <HiArrowPath size={32} color="#667eea" />
+                <HiRefresh size={32} color="#667eea" />
               </motion.div>
             </LoadingOverlay>
           )}

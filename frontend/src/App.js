@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Mic, MicOff, Send, Loader, Bot, User, LogOut } from 'react-icons/hi';
+import { HiCamera, HiMicrophone, HiMicrophoneOff, HiPaperAirplane, HiRefresh, HiChip, HiUser, HiLogout } from 'react-icons/hi';
 import CameraComponent from './components/CameraComponent';
 import ChatInterface from './components/ChatInterface';
 import StatusIndicator from './components/StatusIndicator';
@@ -433,7 +433,7 @@ function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {isProcessing ? <HiArrowPath size={20} /> : <HiPaperAirplane size={20} />}
+              {isProcessing ? <HiRefresh size={20} /> : <HiPaperAirplane size={20} />}
               {isProcessing ? 'Processing...' : 'Ask AI'}
             </ControlButton>
           </ControlPanel>

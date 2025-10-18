@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiX, HiExclamation, HiCheckCircle, HiInformationCircle, HiArrowPath } from 'react-icons/hi';
+import { HiX, HiExclamation, HiCheckCircle, HiInformationCircle, HiRefresh } from 'react-icons/hi';
 
 const ModalOverlay = styled(motion.div)`
   position: fixed;
@@ -220,7 +220,7 @@ const ErrorModal = ({ isOpen, onClose, error, onRetry }) => {
                             </Button>
                             {onRetry && (
                                 <Button variant="primary" onClick={onRetry}>
-                                    <HiArrowPath size={16} style={{ marginRight: '0.5rem' }} />
+                                    <HiRefresh size={16} style={{ marginRight: '0.5rem' }} />
                                     Retry
                                 </Button>
                             )}

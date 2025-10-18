@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { HiWifi, HiWifiOff, HiCamera, HiCameraOff, HiChip, HiChipOff, HiArrowPath } from 'react-icons/hi';
+import { HiWifi, HiStatusOffline, HiCamera, HiVideoCamera, HiChip, HiRefresh, HiExclamation } from 'react-icons/hi';
 
 const StatusContainer = styled.div`
   display: flex;
@@ -69,7 +69,7 @@ const StatusIndicator = ({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
             >
-                {isConnected ? <HiWifi size={16} /> : <HiWifiOff size={16} />}
+                {isConnected ? <HiWifi size={16} /> : <HiStatusOffline size={16} />}
                 {isConnected ? 'Connected' : 'Disconnected'}
             </StatusItem>
 
@@ -79,7 +79,7 @@ const StatusIndicator = ({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
             >
-                {isCameraActive ? <HiCamera size={16} /> : <HiCameraOff size={16} />}
+                {isCameraActive ? <HiCamera size={16} /> : <HiVideoCamera size={16} />}
                 Camera {isCameraActive ? 'On' : 'Off'}
             </StatusItem>
 
@@ -89,7 +89,7 @@ const StatusIndicator = ({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.2 }}
             >
-                {isLLMAvailable ? <HiChip size={16} /> : <HiChipOff size={16} />}
+                {isLLMAvailable ? <HiChip size={16} /> : <HiExclamation size={16} />}
                 AI {isLLMAvailable ? 'Ready' : 'Unavailable'}
             </StatusItem>
 
@@ -101,7 +101,7 @@ const StatusIndicator = ({
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.3, delay: 0.3 }}
                 >
-                    <HiArrowPath size={16} />
+                    <HiRefresh size={16} />
                     Processing
                 </StatusItem>
             )}
